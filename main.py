@@ -139,23 +139,26 @@ def game_loop(pon_rec, pon_des):
     larg_obj = 0
     alt_obj = 0
 
-    pos_lata1X = 50
-    pos_lata1Y = 50
+    dim_lata = [[50,50], [600,50], [50, 350], [600, 350]]
+    random.shuffle(dim_lata)
+
+    pos_lata1X = dim_lata[0][0]
+    pos_lata1Y = dim_lata[0][1]
     larg_lata1 = 130
     alt_lata1 = 211
 
-    pos_lata2X = 600
-    pos_lata2Y = 50
+    pos_lata2X = dim_lata[1][0]
+    pos_lata2Y = dim_lata[1][1]
     larg_lata2 = 130
     alt_lata2 = 211
 
-    pos_lata3X = 50
-    pos_lata3Y = 350
+    pos_lata3X = dim_lata[2][0]
+    pos_lata3Y = dim_lata[2][1]
     larg_lata3 = 130
     alt_lata3 = 211
 
-    pos_lata4X = 600
-    pos_lata4Y = 350
+    pos_lata4X = dim_lata[3][0]
+    pos_lata4Y = dim_lata[3][1]
     larg_lata4 = 130
     alt_lata4 = 211
     
@@ -185,8 +188,6 @@ def game_loop(pon_rec, pon_des):
     
     while True:
         
-          
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -223,16 +224,165 @@ def game_loop(pon_rec, pon_des):
                 if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
                     movi_y = 0
 
+            ##Colisão de todas as posições vidro
+            if pos_lata1X == 50 and pos_lata1Y == 50:
+                if pos_objX  < pos_lata1X + larg_lata1 and pos_objY < pos_lata1Y + larg_lata1:
+                    if obj_mostrado == obj_vidro:
+                        recic +=1
+                        game_loop(recic, desper)
+                    else:
+                        desper +=1
+                        mostra_mensagem()
+                        game_loop(recic, desper)
+            elif pos_lata1X == 600 and pos_lata1Y == 50:
+                if pos_objX + larg_obj  > pos_lata1X and pos_objY < pos_lata1Y + larg_lata1:
+                    if obj_mostrado == obj_vidro:
+                        recic += 1
+                        game_loop(recic, desper)
+                    else:
+                        desper +=1
+                        mostra_mensagem()
+                        game_loop(recic, desper)
+                elif pos_lata1X == 50 and pos_lata1Y == 350:
+                    if pos_objX < pos_lata1X + larg_lata1 and pos_objY + alt_obj > pos_lata1Y:
+                        if obj_mostrado == obj_vidro:
+                            recic +=1
+                            game_loop(recic, desper)
+                        else:
+                            desper +=1
+                            mostra_mensagem()
+                            game_loop(recic, desper)
+            elif pos_lata1X == 600 and pos_lata1Y == 350:
+                if pos_objX + larg_obj > pos_lata4X and pos_objY + alt_obj > pos_lata4Y:
+                    if obj_mostrado == obj_vidro:
+                        desper +=1
+                        recic +=1
+                        game_loop(recic, desper)
+                    else:
+                        desper +=1
+                        mostra_mensagem()
+                        game_loop(recic, desper)
 
-            if pos_objX  < pos_lata1X + larg_lata1 and pos_objY < pos_lata1Y + larg_lata1:
-                if obj_mostrado == obj_vidro:
-                    recic +=1
-                    game_loop(recic, desper)
-                else:
-                    desper +=1
-                    mostra_mensagem()
-                    game_loop(recic, desper)
 
+            ##Colisão de todas as posições metal
+            if pos_lata2X == 50 and pos_lata2Y == 50:
+                if pos_objX  < pos_lata2X + larg_lata2 and pos_objY < pos_lata2Y + larg_lata2:
+                    if obj_mostrado == obj_metal:
+                        recic +=1
+                        game_loop(recic, desper)
+                    else:
+                        desper +=1
+                        mostra_mensagem()
+                        game_loop(recic, desper)
+            elif pos_lata2X == 600 and pos_lata2Y == 50:
+                if pos_objX + larg_obj  > pos_lata2X and pos_objY < pos_lata2Y + larg_lata2:
+                    if obj_mostrado == obj_metal:
+                        recic += 1
+                        game_loop(recic, desper)
+                    else:
+                        desper +=1
+                        mostra_mensagem()
+                        game_loop(recic, desper)
+            elif pos_lata2X == 50 and pos_lata2Y == 350:
+                if pos_objX < pos_lata2X + larg_lata2 and pos_objY + alt_obj > pos_lata2Y:
+                    if obj_mostrado == obj_metal:
+                        recic +=1
+                        game_loop(recic, desper)
+                    else:
+                        desper +=1
+                        mostra_mensagem()
+                        game_loop(recic, desper)
+            elif pos_lata2X == 600 and pos_lata2Y == 350:
+                if pos_objX + larg_obj > pos_lata2X and pos_objY + alt_obj > pos_lata2Y:
+                    if obj_mostrado == obj_metal:
+                        desper +=1
+                        recic +=1
+                        game_loop(recic, desper)
+                    else:
+                        desper +=1
+                        mostra_mensagem()
+                        game_loop(recic, desper)  
+
+            ##Colisão de todas as posições plastico
+            if pos_lata3X == 50 and pos_lata3Y == 50:
+                if pos_objX  < pos_lata3X + larg_lata3 and pos_objY < pos_lata3Y + larg_lata3:
+                    if obj_mostrado == obj_plast:
+                        recic +=1
+                        game_loop(recic, desper)
+                    else:
+                        desper +=1
+                        mostra_mensagem()
+                        game_loop(recic, desper)
+            elif pos_lata3X == 600 and pos_lata3Y == 50:
+                if pos_objX + larg_obj  > pos_lata3X and pos_objY < pos_lata3Y + larg_lata3:
+                    if obj_mostrado == obj_plast:
+                        recic += 1
+                        game_loop(recic, desper)
+                    else:
+                        desper +=1
+                        mostra_mensagem()
+                        game_loop(recic, desper)
+            elif pos_lata3X == 50 and pos_lata3Y == 350:
+                if pos_objX < pos_lata3X + larg_lata3 and pos_objY + alt_obj > pos_lata3Y:
+                    if obj_mostrado == obj_plast:
+                        recic +=1
+                        game_loop(recic, desper)
+                    else:
+                        desper +=1
+                        mostra_mensagem()
+                        game_loop(recic, desper)
+            elif pos_lata3X == 600 and pos_lata3Y == 350:
+                if pos_objX + larg_obj > pos_lata3X and pos_objY + alt_obj > pos_lata3Y:
+                    if obj_mostrado == obj_plast:
+                        desper +=1
+                        recic +=1
+                        game_loop(recic, desper)
+                    else:
+                        desper +=1
+                        mostra_mensagem()
+                        game_loop(recic, desper)
+
+            ##Colisão de todas as posições papel
+            if pos_lata4X == 50 and pos_lata4Y == 50:
+                if pos_objX  < pos_lata4X + larg_lata4 and pos_objY < pos_lata4Y + larg_lata4:
+                    if obj_mostrado == obj_papel:
+                        recic +=1
+                        game_loop(recic, desper)
+                    else:
+                        desper +=1
+                        mostra_mensagem()
+                        game_loop(recic, desper)
+            elif pos_lata4X == 600 and pos_lata4Y == 50:
+                if pos_objX + larg_obj  > pos_lata4X and pos_objY < pos_lata4Y + larg_lata4:
+                    if obj_mostrado == obj_papel:
+                        recic += 1
+                        game_loop(recic, desper)
+                    else:
+                        desper +=1
+                        mostra_mensagem()
+                        game_loop(recic, desper)
+            elif pos_lata4X == 50 and pos_lata4Y == 350:
+                if pos_objX < pos_lata4X + larg_lata4 and pos_objY + alt_obj > pos_lata4Y:
+                    if obj_mostrado == obj_papel:
+                        recic +=1
+                        game_loop(recic, desper)
+                    else:
+                        desper +=1
+                        mostra_mensagem()
+                        game_loop(recic, desper)
+            elif pos_lata4X == 600 and pos_lata4Y == 350:
+                if pos_objX + larg_obj > pos_lata4X and pos_objY + alt_obj > pos_lata4Y:
+                    if obj_mostrado == obj_papel:
+                        desper +=1
+                        recic +=1
+                        game_loop(recic, desper)
+                    else:
+                        desper +=1
+                        mostra_mensagem()
+                        game_loop(recic, desper)
+
+            '''
+            #Colisão lata 2
             if pos_objX + larg_obj  > pos_lata2X and pos_objY < pos_lata2Y + larg_lata2:
                 if obj_mostrado == obj_metal:
                     recic += 1
@@ -242,6 +392,7 @@ def game_loop(pon_rec, pon_des):
                     mostra_mensagem()
                     game_loop(recic, desper)
 
+            #Colisão lata 3
             if pos_objX < pos_lata3X + larg_lata3 and pos_objY + alt_obj > pos_lata3Y:
                 if obj_mostrado == obj_plast:
                     recic +=1
@@ -251,7 +402,7 @@ def game_loop(pon_rec, pon_des):
                     mostra_mensagem()
                     game_loop(recic, desper)
                 
-
+            #Colisão lata 4
             if pos_objX + larg_obj > pos_lata4X and pos_objY + alt_obj > pos_lata4Y:
                 if obj_mostrado == obj_papel:
                     desper +=1
@@ -261,6 +412,7 @@ def game_loop(pon_rec, pon_des):
                     desper +=1
                     mostra_mensagem()
                     game_loop(recic, desper)  
+            '''
 
             if desper >= 5:
                 game_over() 
