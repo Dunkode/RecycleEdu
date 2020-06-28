@@ -92,7 +92,7 @@ def text_objects(text, font):
     return textSurface, textSurface.get_rect()
 
 def mostra_mensagem(text):
-    largeText = pygame.font.Font('freesansbold.ttf', 115)
+    largeText = pygame.font.Font('freesansbold.ttf', 60)
     TextSurf, TextRect = text_objects(text, largeText)
     TextRect.center = (larguraTela/2, alturaTela/2)
     gamedisplay.blit(TextSurf, TextRect)
@@ -111,8 +111,8 @@ def desperdicados(contador=0):
     text = fonte.render('Desperdiçados: '+ str(contador), True, white)
     gamedisplay.blit(text, (760, 770))
 
-def game_over():
-    mostra_mensagem('Você morreu!')
+def game_over(mensagem = 'Você fez o descarte inapropriado!'):
+    mostra_mensagem(mensagem)
 
 
 
@@ -135,23 +135,23 @@ def game_loop():
 
     pos_lata1X = 50
     pos_lata1Y = 50
-    larg_lata1 = 131
-    alt_lata1 = 210
+    larg_lata1 = 130
+    alt_lata1 = 211
 
     pos_lata2X = 600
     pos_lata2Y = 50
-    larg_lata2 = 131
-    alt_lata2 = 210
+    larg_lata2 = 130
+    alt_lata2 = 211
 
     pos_lata3X = 50
     pos_lata3Y = 350
-    larg_lata3 = 131
-    alt_lata3 = 210
+    larg_lata3 = 130
+    alt_lata3 = 211
 
     pos_lata4X = 600
     pos_lata4Y = 350
-    larg_lata4 = 131
-    alt_lata4 = 210
+    larg_lata4 = 130
+    alt_lata4 = 211
 
     obj_mostrado = novo_obj()
 
@@ -174,7 +174,6 @@ def game_loop():
         alt_obj = 103
 
     recic = 0
-    desper = 0
     
     while True:
         # event.get() devolve uma lista de eventos que estão acontecendo
@@ -198,11 +197,11 @@ def game_loop():
                     
             if pos_objX > larguraTela - larg_obj or pos_objX < 0:
                  movi_x = 0
-                 game_loop()
+                 game_over('Você jogou o lixo na rua!')
 
             if pos_objY > alturaTela - alt_obj or pos_objY < 0:
                 movi_x = 0
-                game_loop()
+                game_over('Você jogou o lixo na rua!')
                 
 
             if event.type == pygame.KEYUP:
@@ -210,57 +209,32 @@ def game_loop():
                     movi_x = 0
                 if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
                     movi_y = 0
-
-            '''
-            if ironPosicaoX < missel_x and ironPosicaoX + largura_iron > missel_x 
-            or missel_x + largura_missel > ironPosicaoX and missel_x + largura_missel < ironPosicaoX + largura_iron:
-            '''
+                    
 
             if pos_objX  < pos_lata1X + larg_lata1 and pos_objY < pos_lata1Y + larg_lata1:
-                if obj_mostrado == obj_papel:
-                    desper +=1
-                elif obj_mostrado == obj_metal:
-                    desper += 1
-                elif obj_mostrado == obj_plast:
-                    desper += 1
-                elif obj_mostrado == obj_vidro:
-                    recic += 1  
+                if obj_mostrado == obj_vidro:
+                    recic +=1
+                else:
+                    game_over()
 
             if pos_objX + larg_obj  > pos_lata2X and pos_objY < pos_lata2Y + larg_lata2:
-                if obj_mostrado == obj_papel:
-                    desper +=1
-                elif obj_mostrado == obj_metal:
+                if obj_mostrado == obj_metal:
                     recic += 1
-                elif obj_mostrado == obj_plast:
-                    desper += 1
-                elif obj_mostrado == obj_vidro:
-                    desper += 1  
-                
+                else:
+                    game_over()
 
             if pos_objX < pos_lata3X + larg_lata3 and pos_objY + alt_obj > pos_lata3Y:
-                if obj_mostrado == obj_papel:
-                    desper +=1
-                elif obj_mostrado == obj_metal:
-                    desper += 1
-                elif obj_mostrado == obj_plast:
-                    recic += 1
-                elif obj_mostrado == obj_vidro:
-                    desper += 1  
+                if obj_mostrado == obj_plast:
+                    recic +=1
+                else:
+                    game_over()
                 
 
             if pos_objX + larg_obj > pos_lata4X and pos_objY + alt_obj > pos_lata4Y:
-                if obj_mostrado == obj_papel:
-                    desper +=1
-                elif obj_mostrado == obj_metal:
-                    desper += 1
-                elif obj_mostrado == obj_plast:
-                    desper += 1
-                elif obj_mostrado == obj_vidro:
-                    recic += 1  
-                
-
-            
-                
+                if obj_mostrado == obj_vidro:
+                    recic +=1
+                else:
+                    game_over()     
 
         pos_objX += movi_x
         pos_objY += movi_y      
