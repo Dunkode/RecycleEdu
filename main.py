@@ -1,10 +1,15 @@
 import pygame
 import time
 import random
+from engine.log import abre_log, salva_nome
 
 pygame.init()
 
-############# Variáveis Gerais #############
+abre_log()
+nome = input('Digite seu nome: ')
+email = input('Digite seu e-mail: ')
+salva_nome(nome, email)
+
 larguraTela = 800
 alturaTela = 600
 gamedisplay = pygame.display.set_mode((larguraTela,alturaTela))
@@ -12,7 +17,6 @@ clock = pygame.time.Clock()
 
 recic = 0
 desper = 0
-# RGB (Red, Green, Blue) (0,255)
 black = (0,0,0)
 white = (255,255,255)
 gray =  (100,100,100)
@@ -49,11 +53,57 @@ metal_azul = pygame.image.load('assets/metal-azul.png')
 ##fundo
 fundo = pygame.image.load('assets/fundo.png')
 
+##musicas
+erro = pygame.mixer.Sound('assets/erro.wav')
+acerto = pygame.mixer.Sound('assets/acerto.wav')
 
-
-############# Funções Gerais #############
-
-
+def colisao(posiX, posiY, larg, objX, objY, altobj, larobj, objmost, rec, des, objeto):
+    recic = rec
+    desper = des
+    if posiX == 50 and posiY == 50:
+        if objX  < posiX + larg and objY < posiY + larg:
+            if objmost == objeto:
+                pygame.mixer.Sound.play(acerto)
+                recic +=1
+                game_loop(recic, desper)
+            else:
+                desper +=1
+                pygame.mixer.Sound.play(erro)
+                mostra_mensagem()
+                game_loop(recic, desper)
+    elif posiX == 600 and posiY == 50:
+        if objX + larobj  > posiX and objY < posiY + larg:
+            if objmost == objeto:
+                pygame.mixer.Sound.play(acerto)
+                recic += 1
+                game_loop(recic, desper)
+            else:
+                desper +=1
+                pygame.mixer.Sound.play(erro)
+                mostra_mensagem()
+                game_loop(recic, desper)
+    elif posiX == 50 and posiY == 350:
+        if objX < posiX + larg and objY + altobj > posiY:
+            if objmost == objeto:
+                pygame.mixer.Sound.play(acerto)
+                recic +=1
+                game_loop(recic, desper)
+            else:
+                desper +=1
+                pygame.mixer.Sound.play(erro)
+                mostra_mensagem()
+                game_loop(recic, desper)
+    elif posiX == 600 and posiY == 350:
+        if objX + larobj > posiX and objY + altobj > posiY:
+            if objmost == objeto:
+                pygame.mixer.Sound.play(acerto)
+                recic +=1
+                game_loop(recic, desper)
+            else:
+                desper +=1
+                pygame.mixer.Sound.play(erro)
+                mostra_mensagem()
+                game_loop(recic, desper)
 
 def define_tam(objeto):
     if objeto == obj_vidro:
@@ -108,30 +158,22 @@ def mostra_mensagem(text = 'Descarte incorreto!'):
 
 
 def reciclados(contador=0):
-    fonte = pygame.font.SysFont(None, 25)
+    fonte = pygame.font.SysFont(None, 30)
     text = fonte.render('Reciclados: '+ str(contador), True, green)
-    gamedisplay.blit(text, (10, 30))
+    gamedisplay.blit(text, (10, 10))
 
 def desperdicados(contador=0):
-    fonte = pygame.font.SysFont(None, 25)
-    text = fonte.render('desperdiçados: '+ str(contador), True, red)
-    gamedisplay.blit(text, (600, 30))
+    fonte = pygame.font.SysFont(None, 30)
+    text = fonte.render('Desperdiçados: '+ str(contador), True, red)
+    gamedisplay.blit(text, (600, 10))
 
 def game_over():
     mostra_mensagem('Você poluiu demais!')
     game_loop(0, 0)
 
 
-
-
-############ Looping do Jogo
-
 def game_loop(pon_rec, pon_des):
-    '''
-    pygame.mixer.music.set_volume(0.01)
-    pygame.mixer.music.load('assets/ironsound.mp3')
-    pygame.mixer.music.play(-1)
-    '''
+
     pos_objX = 350
     pos_objY = 250
     movi_x = 0
@@ -207,12 +249,14 @@ def game_loop(pon_rec, pon_des):
                     
             if pos_objX > larguraTela - larg_obj or pos_objX < 0:
                 movi_x = 0
+                pygame.mixer.Sound.play(erro)
                 mostra_mensagem('Você jogou o lixo na rua!')
                 desper += 1
                 game_loop(recic, desper)
 
             if pos_objY > alturaTela - alt_obj or pos_objY < 0:
                 movi_x = 0
+                pygame.mixer.Sound.play(erro)
                 mostra_mensagem('Você jogou o lixo na rua!')
                 desper += 1
                 game_loop(recic, desper)
@@ -224,195 +268,10 @@ def game_loop(pon_rec, pon_des):
                 if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
                     movi_y = 0
 
-            ##Colisão de todas as posições vidro
-            if pos_lata1X == 50 and pos_lata1Y == 50:
-                if pos_objX  < pos_lata1X + larg_lata1 and pos_objY < pos_lata1Y + larg_lata1:
-                    if obj_mostrado == obj_vidro:
-                        recic +=1
-                        game_loop(recic, desper)
-                    else:
-                        desper +=1
-                        mostra_mensagem()
-                        game_loop(recic, desper)
-            elif pos_lata1X == 600 and pos_lata1Y == 50:
-                if pos_objX + larg_obj  > pos_lata1X and pos_objY < pos_lata1Y + larg_lata1:
-                    if obj_mostrado == obj_vidro:
-                        recic += 1
-                        game_loop(recic, desper)
-                    else:
-                        desper +=1
-                        mostra_mensagem()
-                        game_loop(recic, desper)
-                elif pos_lata1X == 50 and pos_lata1Y == 350:
-                    if pos_objX < pos_lata1X + larg_lata1 and pos_objY + alt_obj > pos_lata1Y:
-                        if obj_mostrado == obj_vidro:
-                            recic +=1
-                            game_loop(recic, desper)
-                        else:
-                            desper +=1
-                            mostra_mensagem()
-                            game_loop(recic, desper)
-            elif pos_lata1X == 600 and pos_lata1Y == 350:
-                if pos_objX + larg_obj > pos_lata4X and pos_objY + alt_obj > pos_lata4Y:
-                    if obj_mostrado == obj_vidro:
-                        desper +=1
-                        recic +=1
-                        game_loop(recic, desper)
-                    else:
-                        desper +=1
-                        mostra_mensagem()
-                        game_loop(recic, desper)
-
-
-            ##Colisão de todas as posições metal
-            if pos_lata2X == 50 and pos_lata2Y == 50:
-                if pos_objX  < pos_lata2X + larg_lata2 and pos_objY < pos_lata2Y + larg_lata2:
-                    if obj_mostrado == obj_metal:
-                        recic +=1
-                        game_loop(recic, desper)
-                    else:
-                        desper +=1
-                        mostra_mensagem()
-                        game_loop(recic, desper)
-            elif pos_lata2X == 600 and pos_lata2Y == 50:
-                if pos_objX + larg_obj  > pos_lata2X and pos_objY < pos_lata2Y + larg_lata2:
-                    if obj_mostrado == obj_metal:
-                        recic += 1
-                        game_loop(recic, desper)
-                    else:
-                        desper +=1
-                        mostra_mensagem()
-                        game_loop(recic, desper)
-            elif pos_lata2X == 50 and pos_lata2Y == 350:
-                if pos_objX < pos_lata2X + larg_lata2 and pos_objY + alt_obj > pos_lata2Y:
-                    if obj_mostrado == obj_metal:
-                        recic +=1
-                        game_loop(recic, desper)
-                    else:
-                        desper +=1
-                        mostra_mensagem()
-                        game_loop(recic, desper)
-            elif pos_lata2X == 600 and pos_lata2Y == 350:
-                if pos_objX + larg_obj > pos_lata2X and pos_objY + alt_obj > pos_lata2Y:
-                    if obj_mostrado == obj_metal:
-                        desper +=1
-                        recic +=1
-                        game_loop(recic, desper)
-                    else:
-                        desper +=1
-                        mostra_mensagem()
-                        game_loop(recic, desper)  
-
-            ##Colisão de todas as posições plastico
-            if pos_lata3X == 50 and pos_lata3Y == 50:
-                if pos_objX  < pos_lata3X + larg_lata3 and pos_objY < pos_lata3Y + larg_lata3:
-                    if obj_mostrado == obj_plast:
-                        recic +=1
-                        game_loop(recic, desper)
-                    else:
-                        desper +=1
-                        mostra_mensagem()
-                        game_loop(recic, desper)
-            elif pos_lata3X == 600 and pos_lata3Y == 50:
-                if pos_objX + larg_obj  > pos_lata3X and pos_objY < pos_lata3Y + larg_lata3:
-                    if obj_mostrado == obj_plast:
-                        recic += 1
-                        game_loop(recic, desper)
-                    else:
-                        desper +=1
-                        mostra_mensagem()
-                        game_loop(recic, desper)
-            elif pos_lata3X == 50 and pos_lata3Y == 350:
-                if pos_objX < pos_lata3X + larg_lata3 and pos_objY + alt_obj > pos_lata3Y:
-                    if obj_mostrado == obj_plast:
-                        recic +=1
-                        game_loop(recic, desper)
-                    else:
-                        desper +=1
-                        mostra_mensagem()
-                        game_loop(recic, desper)
-            elif pos_lata3X == 600 and pos_lata3Y == 350:
-                if pos_objX + larg_obj > pos_lata3X and pos_objY + alt_obj > pos_lata3Y:
-                    if obj_mostrado == obj_plast:
-                        desper +=1
-                        recic +=1
-                        game_loop(recic, desper)
-                    else:
-                        desper +=1
-                        mostra_mensagem()
-                        game_loop(recic, desper)
-
-            ##Colisão de todas as posições papel
-            if pos_lata4X == 50 and pos_lata4Y == 50:
-                if pos_objX  < pos_lata4X + larg_lata4 and pos_objY < pos_lata4Y + larg_lata4:
-                    if obj_mostrado == obj_papel:
-                        recic +=1
-                        game_loop(recic, desper)
-                    else:
-                        desper +=1
-                        mostra_mensagem()
-                        game_loop(recic, desper)
-            elif pos_lata4X == 600 and pos_lata4Y == 50:
-                if pos_objX + larg_obj  > pos_lata4X and pos_objY < pos_lata4Y + larg_lata4:
-                    if obj_mostrado == obj_papel:
-                        recic += 1
-                        game_loop(recic, desper)
-                    else:
-                        desper +=1
-                        mostra_mensagem()
-                        game_loop(recic, desper)
-            elif pos_lata4X == 50 and pos_lata4Y == 350:
-                if pos_objX < pos_lata4X + larg_lata4 and pos_objY + alt_obj > pos_lata4Y:
-                    if obj_mostrado == obj_papel:
-                        recic +=1
-                        game_loop(recic, desper)
-                    else:
-                        desper +=1
-                        mostra_mensagem()
-                        game_loop(recic, desper)
-            elif pos_lata4X == 600 and pos_lata4Y == 350:
-                if pos_objX + larg_obj > pos_lata4X and pos_objY + alt_obj > pos_lata4Y:
-                    if obj_mostrado == obj_papel:
-                        desper +=1
-                        recic +=1
-                        game_loop(recic, desper)
-                    else:
-                        desper +=1
-                        mostra_mensagem()
-                        game_loop(recic, desper)
-
-            '''
-            #Colisão lata 2
-            if pos_objX + larg_obj  > pos_lata2X and pos_objY < pos_lata2Y + larg_lata2:
-                if obj_mostrado == obj_metal:
-                    recic += 1
-                    game_loop(recic, desper)
-                else:
-                    desper +=1
-                    mostra_mensagem()
-                    game_loop(recic, desper)
-
-            #Colisão lata 3
-            if pos_objX < pos_lata3X + larg_lata3 and pos_objY + alt_obj > pos_lata3Y:
-                if obj_mostrado == obj_plast:
-                    recic +=1
-                    game_loop(recic, desper)
-                else:
-                    desper +=1
-                    mostra_mensagem()
-                    game_loop(recic, desper)
-                
-            #Colisão lata 4
-            if pos_objX + larg_obj > pos_lata4X and pos_objY + alt_obj > pos_lata4Y:
-                if obj_mostrado == obj_papel:
-                    desper +=1
-                    recic +=1
-                    game_loop(recic, desper)
-                else:
-                    desper +=1
-                    mostra_mensagem()
-                    game_loop(recic, desper)  
-            '''
+            colisao(pos_lata1X, pos_lata1Y, larg_lata1, pos_objX, pos_objY, alt_obj, larg_obj, obj_mostrado, recic, desper, obj_vidro)
+            colisao(pos_lata2X, pos_lata2Y, larg_lata2, pos_objX, pos_objY, alt_obj, larg_obj, obj_mostrado, recic, desper, obj_metal)
+            colisao(pos_lata3X, pos_lata3Y, larg_lata3, pos_objX, pos_objY, alt_obj, larg_obj, obj_mostrado, recic, desper, obj_plast)
+            colisao(pos_lata4X, pos_lata4Y, larg_lata4, pos_objX, pos_objY, alt_obj, larg_obj, obj_mostrado, recic, desper, obj_papel)
 
             if desper >= 5:
                 game_over() 
@@ -435,4 +294,7 @@ def game_loop(pon_rec, pon_des):
         pygame.display.update()
         clock.tick(100)
 
+pygame.mixer.music.set_volume(0.5)
+pygame.mixer.music.load('assets/musica-fundo.mp3')
+pygame.mixer.music.play(-1)
 game_loop(recic, desper)
