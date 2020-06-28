@@ -50,6 +50,10 @@ metal_verd = pygame.image.load('assets/metal-verde.png')
 metal_verm = pygame.image.load('assets/metal-verm.png')
 metal_azul = pygame.image.load('assets/metal-azul.png')
 
+icone = pygame.image.load('assets/recycle-icon.png')
+pygame.display.set_icon(icone)
+pygame.display.set_caption("RecicleEdu")
+
 ##fundo
 fundo = pygame.image.load('assets/fundo.png')
 

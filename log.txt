@@ -1,13 +1,9 @@
 -----------------------------HISTÓRICO DE JOGADORES-----------------------------
 
-Nome: Éderson
-Email: ederson@gmail.com
+Nome: a
+Email: a
 
 
 Nome: a
-Email: b
-
-
-Nome: c
-Email: v
+Email: a
 
