@@ -9,10 +9,15 @@ larguraTela = 800
 alturaTela = 600
 gamedisplay = pygame.display.set_mode((larguraTela,alturaTela))
 clock = pygame.time.Clock()
+
+recic = 0
+desper = 0
 # RGB (Red, Green, Blue) (0,255)
 black = (0,0,0)
 white = (255,255,255)
 gray =  (100,100,100)
+red = (255, 0, 0)
+green = (0,255,0)
 
 ## Lixo movimentavel
 obj_metal = pygame.image.load('assets/metal.png')
@@ -47,6 +52,8 @@ fundo = pygame.image.load('assets/fundo.png')
 
 
 ############# Funções Gerais #############
+
+
 
 def define_tam(objeto):
     if objeto == obj_vidro:
@@ -91,43 +98,42 @@ def text_objects(text, font):
     textSurface = font.render(text, True, black)
     return textSurface, textSurface.get_rect()
 
-def mostra_mensagem(text):
-    largeText = pygame.font.Font('freesansbold.ttf', 60)
+def mostra_mensagem(text = 'Descarte incorreto!'):
+    largeText = pygame.font.Font('freesansbold.ttf', 40)
     TextSurf, TextRect = text_objects(text, largeText)
     TextRect.center = (larguraTela/2, alturaTela/2)
     gamedisplay.blit(TextSurf, TextRect)
     pygame.display.update()
-    time.sleep(5)
-    game_loop()
+    time.sleep(1)
 
 
 def reciclados(contador=0):
     fonte = pygame.font.SysFont(None, 25)
-    text = fonte.render('Reciclados: '+ str(contador), True, white)
+    text = fonte.render('Reciclados: '+ str(contador), True, green)
     gamedisplay.blit(text, (10, 30))
 
 def desperdicados(contador=0):
     fonte = pygame.font.SysFont(None, 25)
-    text = fonte.render('Desperdiçados: '+ str(contador), True, white)
-    gamedisplay.blit(text, (760, 770))
+    text = fonte.render('desperdiçados: '+ str(contador), True, red)
+    gamedisplay.blit(text, (600, 30))
 
-def game_over(mensagem = 'Você fez o descarte inapropriado!'):
-    mostra_mensagem(mensagem)
+def game_over():
+    mostra_mensagem('Você poluiu demais!')
+    game_loop(0, 0)
 
 
 
 
 ############ Looping do Jogo
 
-def game_loop():
+def game_loop(pon_rec, pon_des):
     '''
     pygame.mixer.music.set_volume(0.01)
     pygame.mixer.music.load('assets/ironsound.mp3')
     pygame.mixer.music.play(-1)
     '''
-
-    pos_objX = 375
-    pos_objY = 275
+    pos_objX = 350
+    pos_objY = 250
     movi_x = 0
     movi_y = 0
     larg_obj = 0
@@ -152,6 +158,9 @@ def game_loop():
     pos_lata4Y = 350
     larg_lata4 = 130
     alt_lata4 = 211
+    
+    recic = pon_rec
+    desper = pon_des
 
     obj_mostrado = novo_obj()
 
@@ -173,14 +182,14 @@ def game_loop():
         larg_obj = 129
         alt_obj = 103
 
-    recic = 0
     
     while True:
-        # event.get() devolve uma lista de eventos que estão acontecendo
+        
+          
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                # quit() é comando native terminar o programa
                 quit()
 
             if event.type == pygame.KEYDOWN:
@@ -196,12 +205,16 @@ def game_loop():
                     pygame.quit()
                     
             if pos_objX > larguraTela - larg_obj or pos_objX < 0:
-                 movi_x = 0
-                 game_over('Você jogou o lixo na rua!')
+                movi_x = 0
+                mostra_mensagem('Você jogou o lixo na rua!')
+                desper += 1
+                game_loop(recic, desper)
 
             if pos_objY > alturaTela - alt_obj or pos_objY < 0:
                 movi_x = 0
-                game_over('Você jogou o lixo na rua!')
+                mostra_mensagem('Você jogou o lixo na rua!')
+                desper += 1
+                game_loop(recic, desper)
                 
 
             if event.type == pygame.KEYUP:
@@ -209,37 +222,56 @@ def game_loop():
                     movi_x = 0
                 if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
                     movi_y = 0
-                    
+
 
             if pos_objX  < pos_lata1X + larg_lata1 and pos_objY < pos_lata1Y + larg_lata1:
                 if obj_mostrado == obj_vidro:
                     recic +=1
+                    game_loop(recic, desper)
                 else:
-                    game_over()
+                    desper +=1
+                    mostra_mensagem()
+                    game_loop(recic, desper)
 
             if pos_objX + larg_obj  > pos_lata2X and pos_objY < pos_lata2Y + larg_lata2:
                 if obj_mostrado == obj_metal:
                     recic += 1
+                    game_loop(recic, desper)
                 else:
-                    game_over()
+                    desper +=1
+                    mostra_mensagem()
+                    game_loop(recic, desper)
 
             if pos_objX < pos_lata3X + larg_lata3 and pos_objY + alt_obj > pos_lata3Y:
                 if obj_mostrado == obj_plast:
                     recic +=1
+                    game_loop(recic, desper)
                 else:
-                    game_over()
+                    desper +=1
+                    mostra_mensagem()
+                    game_loop(recic, desper)
                 
 
             if pos_objX + larg_obj > pos_lata4X and pos_objY + alt_obj > pos_lata4Y:
-                if obj_mostrado == obj_vidro:
+                if obj_mostrado == obj_papel:
+                    desper +=1
                     recic +=1
+                    game_loop(recic, desper)
                 else:
-                    game_over()     
+                    desper +=1
+                    mostra_mensagem()
+                    game_loop(recic, desper)  
+
+            if desper >= 5:
+                game_over() 
 
         pos_objX += movi_x
         pos_objY += movi_y      
 
         mostraFundo()
+
+        reciclados(recic)
+        desperdicados(desper)
 
         mostra_lata1(lata1, pos_lata1X, pos_lata1Y)
         mostra_lata2(lata2, pos_lata2X, pos_lata2Y)
@@ -249,7 +281,6 @@ def game_loop():
         mostra_obj(obj_mostrado, pos_objX, pos_objY)
 
         pygame.display.update()
-        clock.tick(60)
+        clock.tick(100)
 
-
-game_loop()
+game_loop(recic, desper)
