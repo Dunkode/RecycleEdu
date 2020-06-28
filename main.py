@@ -137,26 +137,30 @@ def game_loop():
     larg_lata4 = 110
     alt_lata4 = 120
 
-    troca_obj = 0
     obj_mostrado = random.choice([obj_metal, obj_papel, obj_plast, obj_vidro])
-    
+
+    if obj_mostrado == obj_vidro:
+        larg_obj = 30
+        alt_obj = 116
+    elif obj_mostrado == obj_metal:
+        larg_obj = 56
+        alt_obj = 120
+    elif obj_mostrado == obj_papel:
+        larg_obj = 100
+        alt_obj = 122
+    elif obj_mostrado == obj_plast:
+        larg_obj = 129
+        alt_obj = 103
+
     cont = 0
     
     while True:
         # event.get() devolve uma lista de eventos que estão acontecendo
-        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 # quit() é comando native terminar o programa
                 quit()
-
-            if troca_obj == 0:
-                obj_mostrado = random.choice([obj_metal, obj_papel, obj_plast, obj_vidro])
-                define_tam(obj_mostrado)
-                troca_obj += 1
-            else:
-                pass
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
@@ -176,8 +180,7 @@ def game_loop():
 
             if pos_objY > alturaTela - alt_obj or pos_objY < 0:
                 movi_x = 0
-                troca_obj = 0
-                break
+                game_loop()
                 
 
             if event.type == pygame.KEYUP:
